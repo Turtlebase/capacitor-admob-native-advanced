@@ -75,7 +75,7 @@ public class AdMobNativeAdvancedManager {
     }
 
     // ─────────────────────────────────────────────
-    // LOAD
+    // LOAD NATIVE AD
     // ─────────────────────────────────────────────
 
     public void loadNativeAd(PluginCall call, String adId, String adUnitId) {
@@ -85,6 +85,12 @@ public class AdMobNativeAdvancedManager {
             call.reject("Activity not available.");
             return;
         }
+
+        // 🔥 Receive layout values from JS (DP)
+        final Integer x = call.getInt("x", 0);
+        final Integer y = call.getInt("y", 0);
+        final Integer width = call.getInt("width", 320);
+        final Integer height = call.getInt("height", 250);
 
         final String template = call.getString("template", "MEDIUM");
         final String customLayout = call.getString("customLayoutName", null);
@@ -105,6 +111,10 @@ public class AdMobNativeAdvancedManager {
                                         plugin,
                                         adId,
                                         nativeAd,
+                                        x,
+                                        y,
+                                        width,
+                                        height,
                                         template,
                                         customLayout
                                 );
@@ -117,6 +127,7 @@ public class AdMobNativeAdvancedManager {
                         call.resolve(result);
                     })
                     .withAdListener(new com.google.android.gms.ads.AdListener() {
+
                         @Override
                         public void onAdFailedToLoad(LoadAdError error) {
                             JSObject result = new JSObject();
@@ -146,12 +157,48 @@ public class AdMobNativeAdvancedManager {
         }
 
         activity.runOnUiThread(() -> {
+
             NativeAdViewHolder holder = adHolders.get(adId);
+
             if (holder == null) {
                 call.reject("No ad loaded with adId: " + adId);
                 return;
             }
+
             holder.show(activity);
+            call.resolve();
+        });
+    }
+
+    // ─────────────────────────────────────────────
+    // UPDATE POSITION (SCROLL FIX)
+    // ─────────────────────────────────────────────
+
+    public void updateNativeAdLayout(PluginCall call, String adId) {
+
+        Activity activity = plugin.getActivity();
+        if (activity == null) {
+            call.reject("Activity not available.");
+            return;
+        }
+
+        activity.runOnUiThread(() -> {
+
+            NativeAdViewHolder holder = adHolders.get(adId);
+
+            if (holder == null) {
+                call.reject("No ad loaded with adId: " + adId);
+                return;
+            }
+
+            holder.updateLayout(
+                    activity,
+                    call.getInt("x", null),
+                    call.getInt("y", null),
+                    call.getInt("width", null),
+                    call.getInt("height", null)
+            );
+
             call.resolve();
         });
     }
@@ -161,10 +208,13 @@ public class AdMobNativeAdvancedManager {
     // ─────────────────────────────────────────────
 
     public void hideNativeAd(PluginCall call, String adId) {
+
         NativeAdViewHolder holder = adHolders.get(adId);
+
         if (holder != null) {
             holder.hide();
         }
+
         call.resolve();
     }
 
