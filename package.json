@@ -1,0 +1,77 @@
+{
+  "name": "@turtlebase/capacitor-admob-native-advanced",
+  "version": "1.0.0",
+  "description": "Capacitor 7 plugin for AdMob Native Advanced ads - supports Android (Java 21, SDK 35)",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/",
+    "src/",
+    "!dist/tsconfig.tsbuildinfo",
+    "LICENSE",
+    "README.md"
+  ],
+  "author": {
+    "name": "Umesh Dafda",
+    "email": "umesh@turtlebase.com",
+    "url": "https://turtlebase.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turtlebase/capacitor-admob-native-advanced.git"
+  },
+  "bugs": {
+    "url": "https://github.com/turtlebase/capacitor-admob-native-advanced/issues"
+  },
+  "homepage": "https://github.com/turtlebase/capacitor-admob-native-advanced#readme",
+  "keywords": [
+    "capacitor",
+    "capacitor-plugin",
+    "admob",
+    "native-ad",
+    "native-advanced",
+    "android",
+    "turtlebase"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "docgen": "docgen --api AdMobNativeAdvancedPlugin --output-readme README.md --output-json dist/docs.json",
+    "lint": "eslint . --ext ts",
+    "fmt": "prettier --write --parser typescript \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/docgen": "^0.2.2",
+    "@ionic/eslint-config": "^0.3.0",
+    "@ionic/prettier-config": "~1.0.1",
+    "@ionic/swiftlint-config": "^1.1.2",
+    "eslint": "^8.57.0",
+    "prettier": "~2.8.0",
+    "rimraf": "^5.0.10",
+    "rollup": "^4.21.3",
+    "typescript": "~5.5.4"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  }
+}

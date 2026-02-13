@@ -1,0 +1,61 @@
+// Turtlebase - capacitor-admob-native-advanced
+// Author: Umesh Dafda <umesh@turtlebase.com>
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.5.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace "com.turtlebase.admob"
+
+    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
+
+    defaultConfig {
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 24
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    // Capacitor 7
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:1.7.0"
+
+    // Use compileOnly for Capacitor so it doesn't conflict with host app.
+    // annotationProcessor processes @CapacitorPlugin for auto-discovery —
+    // no registerPlugin() in MainActivity needed in Capacitor 7.
+    compileOnly "com.capacitorjs:core:7.0.0"
+    annotationProcessor "com.capacitorjs:core:7.0.0"
+
+    // Google Mobile Ads SDK (AdMob)
+    implementation 'com.google.android.gms:play-services-ads:23.3.0'
+}

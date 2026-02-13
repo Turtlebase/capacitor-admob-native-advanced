@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "lib": ["ES2017", "dom"],
+    "module": "es2017",
+    "moduleResolution": "node",
+    "outDir": "./dist/esm/",
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2017"
+  },
+  "include": ["src/**/*"]
+}
