@@ -24,7 +24,6 @@ public class AdMobNativeAdvancedManager {
     private static final String TAG = "TurtlebaseAdMob";
 
     private final AdMobNativeAdvancedPlugin plugin;
-
     private final Map<String, NativeAdViewHolder> adHolders = new HashMap<>();
 
     private boolean sdkInitialized = false;
@@ -33,9 +32,9 @@ public class AdMobNativeAdvancedManager {
         this.plugin = plugin;
     }
 
-    // ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
     // INITIALIZE
-    // ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
 
     public void initialize(
             PluginCall call,
@@ -78,20 +77,16 @@ public class AdMobNativeAdvancedManager {
 
                 switch (maxAdContentRating) {
                     case "PG":
-                        configBuilder.setMaxAdContentRating(
-                                RequestConfiguration.MAX_AD_CONTENT_RATING_PG);
+                        configBuilder.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_PG);
                         break;
                     case "T":
-                        configBuilder.setMaxAdContentRating(
-                                RequestConfiguration.MAX_AD_CONTENT_RATING_T);
+                        configBuilder.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_T);
                         break;
                     case "MA":
-                        configBuilder.setMaxAdContentRating(
-                                RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+                        configBuilder.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
                         break;
                     default:
-                        configBuilder.setMaxAdContentRating(
-                                RequestConfiguration.MAX_AD_CONTENT_RATING_G);
+                        configBuilder.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G);
                         break;
                 }
 
@@ -109,9 +104,9 @@ public class AdMobNativeAdvancedManager {
         });
     }
 
-    // ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
     // LOAD NATIVE AD
-    // ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
 
     public void loadNativeAd(PluginCall call, String adId, String adUnitId) {
 
@@ -121,15 +116,15 @@ public class AdMobNativeAdvancedManager {
             return;
         }
 
-        String position = call.getString("position", "BOTTOM_CENTER");
-        int width = call.getInt("width", 320);
-        int height = call.getInt("height", 250);
-        int marginTop = call.getInt("marginTop", 0);
-        int marginBottom = call.getInt("marginBottom", 0);
-        int x = call.getInt("x", 0);
-        int y = call.getInt("y", 0);
-        String template = call.getString("template", "MEDIUM");
-        String customLayout = call.getString("customLayoutName", null);
+        final String position = call.getString("position", "BOTTOM_CENTER");
+        final int width = call.getInt("width", 320);
+        final int height = call.getInt("height", 250);
+        final int marginTop = call.getInt("marginTop", 0);
+        final int marginBottom = call.getInt("marginBottom", 0);
+        final int x = call.getInt("x", 0);
+        final int y = call.getInt("y", 0);
+        final String template = call.getString("template", "MEDIUM");
+        final String customLayout = call.getString("customLayoutName", null);
 
         activity.runOnUiThread(() -> {
 
@@ -162,10 +157,6 @@ public class AdMobNativeAdvancedManager {
 
                             adHolders.put(adId, holder);
 
-                            JSObject event = new JSObject();
-                            event.put("adId", adId);
-                            plugin.sendEvent("onAdLoaded", event);
-
                             JSObject result = new JSObject();
                             result.put("adId", adId);
                             result.put("loaded", true);
@@ -176,51 +167,17 @@ public class AdMobNativeAdvancedManager {
                             @Override
                             public void onAdFailedToLoad(LoadAdError error) {
 
-                                JSObject event = new JSObject();
-                                event.put("adId", adId);
-                                event.put("errorMessage", error.getMessage());
-                                event.put("errorCode", error.getCode());
-
-                                plugin.sendEvent("onAdFailedToLoad", event);
-
                                 JSObject result = new JSObject();
                                 result.put("adId", adId);
                                 result.put("loaded", false);
+                                result.put("errorMessage", error.getMessage());
+                                result.put("errorCode", error.getCode());
                                 call.resolve(result);
-                            }
-
-                            @Override
-                            public void onAdImpression() {
-                                JSObject event = new JSObject();
-                                event.put("adId", adId);
-                                plugin.sendEvent("onAdImpression", event);
-                            }
-
-                            @Override
-                            public void onAdClicked() {
-                                JSObject event = new JSObject();
-                                event.put("adId", adId);
-                                plugin.sendEvent("onAdClicked", event);
-                            }
-
-                            @Override
-                            public void onAdOpened() {
-                                JSObject event = new JSObject();
-                                event.put("adId", adId);
-                                plugin.sendEvent("onAdOpened", event);
-                            }
-
-                            @Override
-                            public void onAdClosed() {
-                                JSObject event = new JSObject();
-                                event.put("adId", adId);
-                                plugin.sendEvent("onAdClosed", event);
                             }
                         })
                         .withNativeAdOptions(
                                 new NativeAdOptions.Builder()
-                                        .setAdChoicesPlacement(
-                                                NativeAdOptions.ADCHOICES_TOP_RIGHT)
+                                        .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
                                         .build()
                         );
 
@@ -232,9 +189,9 @@ public class AdMobNativeAdvancedManager {
         });
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // SHOW / HIDE / DESTROY / UPDATE
-    // ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // SHOW
+    // ─────────────────────────────────────────────
 
     public void showNativeAd(PluginCall call, String adId) {
 
@@ -255,38 +212,9 @@ public class AdMobNativeAdvancedManager {
         });
     }
 
-    public void hideNativeAd(PluginCall call, String adId) {
-
-        Activity activity = plugin.getActivity();
-        if (activity == null) {
-            call.reject("Activity not available.");
-            return;
-        }
-
-        activity.runOnUiThread(() -> {
-            NativeAdViewHolder holder = adHolders.get(adId);
-            if (holder == null) {
-                call.reject("No ad loaded with adId: " + adId);
-                return;
-            }
-            holder.hide();
-            call.resolve();
-        });
-    }
-
-    public void destroyNativeAd(PluginCall call, String adId) {
-
-        Activity activity = plugin.getActivity();
-        if (activity == null) {
-            call.reject("Activity not available.");
-            return;
-        }
-
-        activity.runOnUiThread(() -> {
-            destroyAdById(adId);
-            call.resolve();
-        });
-    }
+    // ─────────────────────────────────────────────
+    // UPDATE LAYOUT
+    // ─────────────────────────────────────────────
 
     public void updateNativeAdLayout(PluginCall call, String adId) {
 
@@ -304,34 +232,28 @@ public class AdMobNativeAdvancedManager {
                 return;
             }
 
-            String newPosition = call.getString("position", null);
-            Integer newX = call.getInt("x", null);
-            Integer newY = call.getInt("y", null);
-            Integer newWidth = call.getInt("width", null);
-            Integer newHeight = call.getInt("height", null);
-            Integer newMarginTop = call.getInt("marginTop", null);
-            Integer newMarginBottom = call.getInt("marginBottom", null);
-
             holder.updateLayout(
                     activity,
-                    newPosition,
-                    newX,
-                    newY,
-                    newWidth,
-                    newHeight,
-                    newMarginTop,
-                    newMarginBottom
+                    call.getString("position", null),
+                    call.getInt("x", null),
+                    call.getInt("y", null),
+                    call.getInt("width", null),
+                    call.getInt("height", null),
+                    call.getInt("marginTop", null),
+                    call.getInt("marginBottom", null)
             );
 
             call.resolve();
         });
     }
 
-    public void destroyAll() {
-        for (String adId : new ArrayList<>(adHolders.keySet())) {
-            destroyAdById(adId);
-        }
-        adHolders.clear();
+    // ─────────────────────────────────────────────
+    // DESTROY
+    // ─────────────────────────────────────────────
+
+    public void destroyNativeAd(PluginCall call, String adId) {
+        destroyAdById(adId);
+        call.resolve();
     }
 
     private void destroyAdById(String adId) {
