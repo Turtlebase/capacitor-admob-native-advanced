@@ -8,18 +8,10 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-/**
- * Capacitor plugin entry point for Turtlebase AdMob Native Advanced.
- *
- * @author Umesh Dafda <umesh@turtlebase.com>
- * @company Turtlebase
- * @version 1.0.0
- */
 @CapacitorPlugin(name = "AdMobNativeAdvanced")
 public class AdMobNativeAdvancedPlugin extends Plugin {
 
     private static final String TAG = "TurtlebaseAdMob";
-
     private AdMobNativeAdvancedManager adManager;
 
     @Override
@@ -29,9 +21,11 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         Log.d(TAG, "AdMobNativeAdvanced plugin loaded - Turtlebase");
     }
 
-    /**
-     * Initialize the AdMob SDK.
-     */
+    // ✅ SAFE bridge for events (fixes protected access issue)
+    public void sendEvent(String eventName, JSObject data) {
+        super.notifyListeners(eventName, data);
+    }
+
     @PluginMethod
     public void initialize(PluginCall call) {
         String appId = call.getString("appId");
@@ -46,18 +40,15 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         String maxAdContentRating = call.getString("maxAdContentRating", "G");
 
         adManager.initialize(
-            call,
-            appId,
-            Boolean.TRUE.equals(testMode),
-            Boolean.TRUE.equals(tagForChildDirected),
-            Boolean.TRUE.equals(tagForUnderAge),
-            maxAdContentRating
+                call,
+                appId,
+                Boolean.TRUE.equals(testMode),
+                Boolean.TRUE.equals(tagForChildDirected),
+                Boolean.TRUE.equals(tagForUnderAge),
+                maxAdContentRating
         );
     }
 
-    /**
-     * Load a Native Advanced ad.
-     */
     @PluginMethod
     public void loadNativeAd(PluginCall call) {
         String adId = call.getString("adId");
@@ -75,9 +66,6 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         adManager.loadNativeAd(call, adId, adUnitId);
     }
 
-    /**
-     * Show a loaded Native Ad.
-     */
     @PluginMethod
     public void showNativeAd(PluginCall call) {
         String adId = call.getString("adId");
@@ -88,9 +76,6 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         adManager.showNativeAd(call, adId);
     }
 
-    /**
-     * Hide a visible Native Ad.
-     */
     @PluginMethod
     public void hideNativeAd(PluginCall call) {
         String adId = call.getString("adId");
@@ -101,9 +86,6 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         adManager.hideNativeAd(call, adId);
     }
 
-    /**
-     * Destroy and remove a Native Ad from memory.
-     */
     @PluginMethod
     public void destroyNativeAd(PluginCall call) {
         String adId = call.getString("adId");
@@ -114,9 +96,6 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         adManager.destroyNativeAd(call, adId);
     }
 
-    /**
-     * Update position/size of a Native Ad.
-     */
     @PluginMethod
     public void updateNativeAdLayout(PluginCall call) {
         String adId = call.getString("adId");
@@ -127,9 +106,6 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         adManager.updateNativeAdLayout(call, adId);
     }
 
-    /**
-     * Called when the plugin is destroyed — clean up all ads.
-     */
     @Override
     protected void handleOnDestroy() {
         if (adManager != null) {
@@ -137,8 +113,4 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         }
         super.handleOnDestroy();
     }
-}
-
-public void sendEvent(String eventName, JSObject data) {
-    notifyListeners(eventName, data);
 }
