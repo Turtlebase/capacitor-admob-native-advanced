@@ -189,7 +189,8 @@ public class AdMobNativeAdvancedManager {
                                 JSObject eventData = new JSObject();
                                 eventData.put("adId", adId);
                                 eventData.put("event", "onAdLoaded");
-                                plugin.notifyListeners("onAdLoaded", eventData);
+                                plugin.sendEvent("eventName", eventData);
+                                
 
                                 // Resolve the call
                                 JSObject result = new JSObject();
@@ -213,7 +214,7 @@ public class AdMobNativeAdvancedManager {
                             eventData.put("event", "onAdFailedToLoad");
                             eventData.put("errorMessage", loadAdError.getMessage());
                             eventData.put("errorCode", loadAdError.getCode());
-                            plugin.notifyListeners("onAdFailedToLoad", eventData);
+                            plugin.sendEvent("eventName", eventData);
 
                             JSObject result = new JSObject();
                             result.put("adId", adId);
@@ -226,7 +227,7 @@ public class AdMobNativeAdvancedManager {
                             JSObject eventData = new JSObject();
                             eventData.put("adId", adId);
                             eventData.put("event", "onAdImpression");
-                            plugin.notifyListeners("onAdImpression", eventData);
+                            plugin.sendEvent("eventName", eventData);
                         }
 
                         @Override
@@ -234,7 +235,7 @@ public class AdMobNativeAdvancedManager {
                             JSObject eventData = new JSObject();
                             eventData.put("adId", adId);
                             eventData.put("event", "onAdClicked");
-                            plugin.notifyListeners("onAdClicked", eventData);
+                            plugin.sendEvent("eventName", eventData);
                         }
 
                         @Override
@@ -242,7 +243,7 @@ public class AdMobNativeAdvancedManager {
                             JSObject eventData = new JSObject();
                             eventData.put("adId", adId);
                             eventData.put("event", "onAdOpened");
-                            plugin.notifyListeners("onAdOpened", eventData);
+                            plugin.sendEvent("eventName", eventData);
                         }
 
                         @Override
@@ -250,7 +251,7 @@ public class AdMobNativeAdvancedManager {
                             JSObject eventData = new JSObject();
                             eventData.put("adId", adId);
                             eventData.put("event", "onAdClosed");
-                            plugin.notifyListeners("onAdClosed", eventData);
+                            plugin.sendEvent("eventName", eventData);
                         }
                     })
                     .withNativeAdOptions(
