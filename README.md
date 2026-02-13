@@ -1,0 +1,1 @@
+# capacitor-admob-native-advanced
