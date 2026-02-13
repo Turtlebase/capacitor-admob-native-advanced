@@ -1,15 +1,15 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "experimentalDecorators": true,
-    "lib": ["ES2017", "dom"],
-    "module": "es2017",
-    "moduleResolution": "node",
-    "outDir": "./dist/esm/",
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2017"
-  },
-  "include": ["src/**/*"]
-}
+      "compilerOptions": {
+          "target": "ES2020",
+              "module": "ES2020",
+                  "moduleResolution": "node",
+                      "lib": ["ES2020", "DOM"],
+                          "declaration": true,
+                              "outDir": "dist/esm",
+                                  "strict": true,
+                                      "skipLibCheck": true,
+                                          "sourceMap": true,
+                                              "esModuleInterop": true
+                                                },
+                                                  "include": ["src"]
+                                                  }
