@@ -21,7 +21,7 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         Log.d(TAG, "AdMobNativeAdvanced plugin loaded - Turtlebase");
     }
 
-    // ✅ SAFE bridge for events (fixes protected access issue)
+    // ✅ FIX: must be INSIDE class
     public void sendEvent(String eventName, JSObject data) {
         super.notifyListeners(eventName, data);
     }
@@ -40,12 +40,12 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         String maxAdContentRating = call.getString("maxAdContentRating", "G");
 
         adManager.initialize(
-                call,
-                appId,
-                Boolean.TRUE.equals(testMode),
-                Boolean.TRUE.equals(tagForChildDirected),
-                Boolean.TRUE.equals(tagForUnderAge),
-                maxAdContentRating
+            call,
+            appId,
+            Boolean.TRUE.equals(testMode),
+            Boolean.TRUE.equals(tagForChildDirected),
+            Boolean.TRUE.equals(tagForUnderAge),
+            maxAdContentRating
         );
     }
 
