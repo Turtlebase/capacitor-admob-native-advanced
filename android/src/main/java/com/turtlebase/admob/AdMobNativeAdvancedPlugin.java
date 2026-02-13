@@ -18,92 +18,44 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
     public void load() {
         super.load();
         adManager = new AdMobNativeAdvancedManager(this);
-        Log.d(TAG, "AdMobNativeAdvanced plugin loaded - Turtlebase");
+        Log.d(TAG, "AdMobNativeAdvanced plugin loaded");
     }
 
-    // ✅ FIX: must be INSIDE class
     public void sendEvent(String eventName, JSObject data) {
-        super.notifyListeners(eventName, data);
+        notifyListeners(eventName, data);
     }
 
     @PluginMethod
     public void initialize(PluginCall call) {
         String appId = call.getString("appId");
-        if (appId == null || appId.isEmpty()) {
-            call.reject("appId is required for AdMob initialization.");
+        if (appId == null) {
+            call.reject("appId required");
             return;
         }
 
-        Boolean testMode = call.getBoolean("testMode", false);
-        Boolean tagForChildDirected = call.getBoolean("tagForChildDirectedTreatment", false);
-        Boolean tagForUnderAge = call.getBoolean("tagForUnderAgeOfConsent", false);
-        String maxAdContentRating = call.getString("maxAdContentRating", "G");
-
-        adManager.initialize(
-            call,
-            appId,
-            Boolean.TRUE.equals(testMode),
-            Boolean.TRUE.equals(tagForChildDirected),
-            Boolean.TRUE.equals(tagForUnderAge),
-            maxAdContentRating
-        );
+        adManager.initialize(call, appId, false, false, false, "G");
     }
 
     @PluginMethod
     public void loadNativeAd(PluginCall call) {
-        String adId = call.getString("adId");
-        String adUnitId = call.getString("adUnitId");
-
-        if (adId == null || adId.isEmpty()) {
-            call.reject("adId is required.");
-            return;
-        }
-        if (adUnitId == null || adUnitId.isEmpty()) {
-            call.reject("adUnitId is required.");
-            return;
-        }
-
-        adManager.loadNativeAd(call, adId, adUnitId);
+        adManager.loadNativeAd(call,
+                call.getString("adId"),
+                call.getString("adUnitId"));
     }
 
     @PluginMethod
     public void showNativeAd(PluginCall call) {
-        String adId = call.getString("adId");
-        if (adId == null || adId.isEmpty()) {
-            call.reject("adId is required.");
-            return;
-        }
-        adManager.showNativeAd(call, adId);
+        adManager.showNativeAd(call, call.getString("adId"));
     }
 
     @PluginMethod
     public void hideNativeAd(PluginCall call) {
-        String adId = call.getString("adId");
-        if (adId == null || adId.isEmpty()) {
-            call.reject("adId is required.");
-            return;
-        }
-        adManager.hideNativeAd(call, adId);
+        adManager.hideNativeAd(call, call.getString("adId"));
     }
 
     @PluginMethod
     public void destroyNativeAd(PluginCall call) {
-        String adId = call.getString("adId");
-        if (adId == null || adId.isEmpty()) {
-            call.reject("adId is required.");
-            return;
-        }
-        adManager.destroyNativeAd(call, adId);
-    }
-
-    @PluginMethod
-    public void updateNativeAdLayout(PluginCall call) {
-        String adId = call.getString("adId");
-        if (adId == null || adId.isEmpty()) {
-            call.reject("adId is required.");
-            return;
-        }
-        adManager.updateNativeAdLayout(call, adId);
+        adManager.destroyNativeAd(call, call.getString("adId"));
     }
 
     @Override
