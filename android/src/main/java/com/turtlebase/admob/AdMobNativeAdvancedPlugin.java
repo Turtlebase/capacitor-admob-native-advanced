@@ -138,3 +138,7 @@ public class AdMobNativeAdvancedPlugin extends Plugin {
         super.handleOnDestroy();
     }
 }
+
+public void sendEvent(String eventName, JSObject data) {
+    notifyListeners(eventName, data);
+}
